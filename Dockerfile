@@ -21,34 +21,13 @@ RUN docker-php-ext-install pdo_mysql
 
 # Enable GD (with jpeg and freetype support)
 RUN apt-get update \
-    && apt-get install -y libgd2-xpm-dev* libfreetype6-dev libjpeg62-turbo-dev libpng-dev libz-dev libmemcached-dev libmemcached11 libmemcachedutil2 \
-    && pecl install memcached-3.0.3 \
-  && echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini \
+    && apt-get install -y libgd2-xpm-dev* libfreetype6-dev libjpeg62-turbo-dev libpng-dev libz-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     && docker-php-ext-install opcache \
     && docker-php-ext-install bcmath
 
-# include igbinary support
-RUN apt-get install -y libevent-dev libsasl2-dev \
-    && pecl install igbinary-2.0.8 \
-    && docker-php-ext-enable igbinary \
-    && cd /usr/src \
-    && wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz \
-    && tar xzvf libmemcached-1.0.18.tar.gz \
-    && cd libmemcached-1.0.18 \
-    && ./configure \
-    && make && make install \
-    && cd .. \
-    && pecl download memcached-3.0.3 \
-    && tar xvzf memcached-3.0.3.tgz \
-    && cd memcached-3.0.3 \
-    && phpize \
-    && ./configure --enable-memcached-igbinary \
-    && make && make install \
-    && docker-php-ext-enable memcached \
-    && cd .. && rm -rf libmemcached-1.0.18 && rm -rf memcached-3.0.3
-
+RUN pecl install redis && docker-php-ext-enable redis
 
 # Copy fake SSL certs for dev site.
 COPY ./config/ssl/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil.key
