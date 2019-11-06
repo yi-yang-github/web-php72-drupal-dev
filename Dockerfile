@@ -56,32 +56,6 @@ COPY ./config/sites-available/001-default-ssl.conf /etc/apache2/sites-available/
 # enable the SSL dev site
 RUN a2ensite 001-default-ssl
 
-
-# Install Yarn repo
-RUN apt-get update && apt-get install -y gnupg2 apt-transport-https
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y yarn
-
-RUN apt-get update && apt-get install -qq -y libicu-dev \
-    && docker-php-ext-install intl
-
-# NODEJS NVM ---------------------------------------------------------------------------------------------------------------
-ARG NODE_VERSION=6.17.1
-ARG NVM_DIR=/usr/local/nvm
-
-# https://github.com/creationix/nvm#install-script
-RUN mkdir $NVM_DIR && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-
-# add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-# confirm installation
-RUN node -v
-RUN npm -v
-# end NODEJS -----------------------------------------------------------------------------------------------------------
-
 # Register the COMPOSER_HOME environment variable
 ENV COMPOSER_HOME /composer
 
