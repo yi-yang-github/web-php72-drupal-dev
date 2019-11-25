@@ -100,7 +100,7 @@ RUN yarn --version
 # Add Cypress in Drupal dev, so we can run drush from cypress tests.
 RUN yarn add cypress --dev
 # Ensure it's installed
-RUN cypress version
+RUN ./node_modules/.bin/cypress version
 
 WORKDIR /var/www
 
