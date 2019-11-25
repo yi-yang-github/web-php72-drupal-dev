@@ -83,6 +83,18 @@ RUN composer --version
 # Install Drush (PHP/Drupal)
 RUN composer global require drush/drush:9.*
 
+# Add yarn (npm replacement)
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt update && sudo apt install yarn
+# Ensure it's installed
+RUN yarn --version
+
+# Add Cypress in Drupal dev, so we can run drush from cypress tests.
+RUN yarn add cypress --dev
+# Ensure it's installed
+RUN cypress version
+
 WORKDIR /var/www
 
 
