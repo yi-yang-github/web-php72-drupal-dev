@@ -83,6 +83,11 @@ RUN composer --version
 # Install Drush (PHP/Drupal)
 RUN composer global require drush/drush:9.*
 
+
+# Install node from nodesource, newer verion required by yarn installation.
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+ && apt-get install -y nodejs
+
 # Add yarn (npm replacement)
 # - Needs to have apt-transport-https otherwise will have build error.
 RUN sudo apt install apt-transport-https
