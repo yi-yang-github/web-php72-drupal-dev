@@ -98,9 +98,9 @@ RUN sudo apt update && sudo apt install -y yarn
 RUN yarn --version
 
 # Add Cypress in Drupal dev, so we can run drush from cypress tests.
-RUN yarn add cypress --dev
+RUN yarn global add cypress --dev && which cypress
 # Ensure it's installed
-RUN ./node_modules/.bin/cypress version
+RUN cypress version
 
 WORKDIR /var/www
 
